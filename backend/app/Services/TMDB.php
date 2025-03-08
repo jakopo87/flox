@@ -261,6 +261,8 @@
       }
 
       $title = $data->name ?? $data->title;
+      $genreIds = $data->genre_ids ?? [];
+      $genre = $genreIds ? Genre::whereIn('id', $data->genre_ids)->get() : [];
 
       $item = [
         'tmdb_id' => $data->id,
@@ -271,17 +273,17 @@
         'media_type' => $mediaType,
         'released' => $release->copy()->getTimestamp(),
         'released_datetime' => $release,
-        'genre_ids' => $data->genre_ids,
+        'genre_ids' => $genreIds,
         'credit_cast' => $data->credit_cast ?? [],
         'credit_crew' => $data->credit_crew ?? [],
         'review' => $data->review ?? [],
         'user_review' => $data->user_review ?? null,
-        'genre' => Genre::whereIn('id', $data->genre_ids)->get(),
+        'genre' => $genre,
         'episodes' => [],
         'overview' => $data->overview,
         'backdrop' => $data->backdrop_path,
         'homepage' => $data->homepage ?? null,
-        'tmdb_rating' => $data->vote_average,
+        'tmdb_rating' => $data->vote_average ?? "",
         'popularity' => $data->popularity ?? 0,
       ];
 
